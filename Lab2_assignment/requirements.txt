@@ -1,0 +1,10 @@
+apache-airflow
+dvc[gs]
+flask
+fastapi
+scikit-learn
+scipy
+pandas
+numpy
+torch 
+torchvision
