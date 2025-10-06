@@ -1,0 +1,6 @@
+{"timestamp":"2025-10-06T16:01:16.168105Z","level":"info","event":"DAG bundles loaded: dags-folder","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2025-10-06T16:01:16.168955Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/FastAPI.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2025-10-06T16:01:16.321388Z","level":"error","event":"INFO:     Started server process [179]","logger":"task.stderr"}
+{"timestamp":"2025-10-06T16:01:16.321742Z","level":"error","event":"INFO:     Waiting for application startup.","logger":"task.stderr"}
+{"timestamp":"2025-10-06T16:01:16.322325Z","level":"error","event":"INFO:     Application startup complete.","logger":"task.stderr"}
+{"timestamp":"2025-10-06T16:01:16.322397Z","level":"error","event":"INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)","logger":"task.stderr"}

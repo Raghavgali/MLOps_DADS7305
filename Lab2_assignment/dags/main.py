@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pendulum
 from airflow import DAG
-from airflow.providers.standard.operators.bash import BaseOperator
+from airflow.providers.standard.operators.bash import BashOperator
 from airflow.providers.standard.operators.python import PythonOperator
 from airflow.providers.smtp.operators.smtp import EmailOperator
 from airflow.providers.standard.operators.trigger_dagrun import TriggerDagRunOperator
@@ -31,6 +31,76 @@ dag = DAG(
     schedule="@daily",
     catchup=False,
     tags=["example"],
-    owner_links={"Raghavgali": ""}
+    owner_links={"Raghavgali": "https://github.com/Raghavgali/MLOps_DADS7305/tree/main/Lab2_assignment"},
+    max_active_runs=1,
 )
 
+# ---------- Tasks ----------
+owner_task = BashOperator(
+    task_id="task_using_linked_owner",
+    bash_command="echo 1",
+    owner="Raghav Gali",
+    dag=dag,
+)
+
+
+send_email = EmailOperator(
+    task_id="send_email",
+    to="ragavgsm21@gmail.com",
+    subject="Notification from Airflow",
+    html_content="<p>This is a notification email sent from Airflow.</p>",
+    dag=dag,
+)
+
+
+load_data_task = PythonOperator(
+    task_id="load_data_task",
+    python_callable=load_data,
+    dag=dag,
+)
+
+data_preprocessing_task = PythonOperator(
+    task_id="data_preprocessing_task",
+    python_callable=data_preprocessing,
+    op_args=[load_data_task.output],
+    dag=dag,
+)
+
+separate_data_outputs_task = PythonOperator(
+    task_id="separate_data_outputs_task",
+    python_callable=separate_data_outputs,
+    op_args=[data_preprocessing_task.output],
+    dag=dag,
+)
+
+build_save_model_task = PythonOperator(
+    task_id="build_save_model_task",
+    python_callable=build_model,
+    op_args=[separate_data_outputs_task.output, "model.sav"],
+    dag=dag,
+)
+
+load_model_task = PythonOperator(
+    task_id="load_model_task",
+    python_callable=load_model,
+    op_args=[separate_data_outputs_task.output, "model.sav"],
+    dag=dag,
+)
+
+# Fire-and-forget trigger so this DAG can finish cleanly.
+trigger_dag_task = TriggerDagRunOperator(
+    task_id="my_trigger_task",
+    trigger_dag_id="Airflow_Lab2_Flask",
+    conf={"message": "Data from upstream DAG"},
+    reset_dag_run=False,
+    wait_for_completion=False,          # don't block
+    trigger_rule=TriggerRule.ALL_DONE,  # still run even if something upstream fails
+    dag=dag,
+)
+
+
+owner_task >> load_data_task >> data_preprocessing_task >> separate_data_outputs_task >> build_save_model_task >> load_model_task >> trigger_dag_task
+
+
+## Optional: email after model loads (independent branch)
+load_model_task >> send_email
