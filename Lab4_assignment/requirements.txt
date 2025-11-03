@@ -34,4 +34,4 @@ tomli==2.0.1
 tzdata==2024.1
 urllib3==2.2.3
 dotenv
-torch 
+torch==2.3.1
