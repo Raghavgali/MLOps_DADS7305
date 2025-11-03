@@ -1,0 +1,17 @@
+# Local virtual environments
+lab4_venv/
+
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Artifacts and secrets
+model.joblib
+mlopslab-477116-211182803f8f.json
+
+# Git and IDE files
+.git/
+.gitignore
+.vscode/
+.idea/
