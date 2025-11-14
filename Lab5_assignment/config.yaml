@@ -1,0 +1,80 @@
+model_config:
+  prompt: |
+    You are a reasoning and question-generation model.
+
+    Task 1:
+    Given the following seed question, create a NEW reasoning question of similar
+    difficulty and style.
+
+    Seed Question:
+    {question}
+
+    Task 2:
+    Solve BOTH the seed question and the newly created question using detailed,
+    step-by-step chain-of-thought reasoning. Use clear format.
+
+    Return your output strictly in the following JSON structure:
+
+    {
+      "original_question": "...",
+      "original_solution": "...",
+      "new_question": "...",
+      "new_solution": "..."
+    }
+
+  openai_model: gpt-4o-mini
+  temperature: 0.2
+  sampling: greedy
+  num_samples: 1000
+
+  seed_questions:
+    - "If a car travels 180 km in 3 hours, what is its average speed?"
+    - "A store sells shirts at $25 each. If John buys 3 shirts and receives a $10 discount, how much does he pay?"
+    - "A recipe needs 2 cups of sugar for 12 cookies. How much sugar is needed for 30 cookies?"
+    - "A train leaves at 9:15 AM and arrives at 1:45 PM. How long is the trip?"
+    - "A box contains 5 red balls, 3 blue balls, and 2 green balls. What is the probability of drawing a red ball?"
+    - "A laptop originally costs $900. After two successive discounts of 10% and 15%, what is the final price?"
+    - "A man saves $150 every month. How much has he saved in 2 years?"
+    - "A store has a “buy 2 get 1 free” offer. How many items does a customer get if they pay for 8?"
+    - "If 4 workers finish a task in 6 days, how long would 6 workers take (assuming equal productivity)?"
+    - "A rectangle has perimeter 60 cm and length 18 cm. What is its width?"
+    - "If all roses are flowers and some flowers fade quickly, what can be concluded about roses?"
+    - "Tom is older than Jim. Jim is older than Sarah. Who is oldest?"
+    - "If the statement “All cats are mammals” is true, what can be said about a creature that is not a mammal?"
+    - "Five people stand in a line. Anna is in front of Ben. Ben is behind Carla. Carla is second. Who is fifth?"
+    - "If today is Wednesday, what day will it be 17 days from now?"
+    - "You see a boat filled with people, yet there isn’t a single person on board. How is this possible?"
+    - "If a statement is false, and the opposite of that statement is also false, what does that imply?"
+    - "Mary always lies on Mondays. Today she said, 'I lied yesterday.' What day is today?"
+    - "A person points at another and says: 'Brothers and sisters, I have none, but that man’s father is my father's son.' Who is the man?"
+    - "Two people play chess. They play 5 games, and each wins the same number of games. How is this possible?"
+    - "What is the next number in the sequence: 2, 6, 12, 20, 30, …?"
+    - "What comes next: A, C, F, J, O, …?"
+    - "Identify the pattern: 3, 9, 27, 81, …"
+    - "What is the missing number: 14, 17, 23, 26, 32, 35, …?"
+    - "Which number does not belong in the set: 8, 27, 64, 125, 216, 342?"
+    - "Find the next term: 1, 1, 2, 6, 24, …"
+    - "What comes next: 5, 10, 17, 26, 37, …?"
+    - "Next: 11, 13, 17, 19, 23, 29, …"
+    - "Find the next letters: AB, AD, DG, GK, …?"
+    - "Missing number: 4, 18, 100, 180, 484, …"
+    - "Why do doctors advise drinking water before a long flight?"
+    - "Why do metal bridges have small gaps between segments?"
+    - "Why does warm air rise?"
+    - "Why is it harder to breathe at high altitudes?"
+    - "Why does ice float on water?"
+    - "Why should you not look directly at a solar eclipse?"
+    - "Why does a phone battery drain faster in cold weather?"
+    - "Why do ships use radar in foggy conditions?"
+    - "Why does your shadow change size throughout the day?"
+    - "Why do solar panels work better in cooler weather?"
+    - "If a character in a story avoids talking about their past, what might that imply?"
+    - "A city reported fewer traffic accidents after installing more roundabouts. Why might that happen?"
+    - "A student improves grades after reducing screen time. What conclusion can be drawn?"
+    - "If a company cuts prices but revenue increases, what might be happening?"
+    - "A teacher notices that students who take handwritten notes score higher. Why?"
+    - "Why might a business switch from plastic to paper packaging?"
+    - "Why is a job applicant with diverse experience attractive to employers?"
+    - "Why might a witness purposely omit details in a report?"
+    - "A team performs poorly after the captain leaves. What could explain it?"
+    - "Customers spend more time in stores that play calm music. Why?"
