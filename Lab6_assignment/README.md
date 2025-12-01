@@ -162,6 +162,52 @@ Note: Unlike the original Flask app, there is no Cloud Storage upload endpointâ€
 
 ---
 
+### Roadblocks, Debugging Journey & How They Were Solved
+
+1. **BigQuery Schema Mismatch (Column Not Found)**  
+   - *Problem*: `Query parameter 'title_type' not found`, even though the column exists.  
+   - *Cause*: The public IMDb schema uses different casing/naming than the tutorial.  
+   - *Fix*: Inspected the dataset schema in the BigQuery console and aligned all field names (`primaryTitle`, `titleType`, etc.) within the SQL query.
+
+2. **Container Failed to Start on Cloud Run**  
+   - *Problem*: Logs showed `exec format error` and the container never bound to port 8080.  
+   - *Cause*: Image built on Apple Silicon (ARM); Cloud Run expects `linux/amd64`.  
+   - *Fix*: Rebuilt with `docker buildx build --platform linux/amd64 ...` before pushing.
+
+3. **Missing Run Invoker Permissions**  
+   - *Problem*: Visiting the service URL returned `Error: Forbidden`.  
+   - *Cause*: Unauthenticated invoker role not granted.  
+   - *Fix*: `gcloud run services add-iam-policy-binding ... --member=allUsers --role=roles/run.invoker`.
+
+4. **Artifact Registry Permission Denied**  
+   - *Problem*: `denied: Permission "artifactregistry.repositories.uploadArtifacts" denied`.  
+   - *Cause*: Using a service account without Artifact Registry permissions.  
+   - *Fix*: Granted Artifact Registry Writer, Storage Admin, and Cloud Run Admin; re-authenticated with `docker login` using an access token.
+
+5. **Cloud Run Startup Probe Timeout**  
+   - *Problem*: `Default STARTUP TCP probe failed`.  
+   - *Cause*: Cold starts on the constrained ARM image caused slow boot.  
+   - *Fix*: After rebuilding for amd64 (see #2) Cloud Runâ€™s default probe succeeded; no custom probe needed.
+
+6. **Local Docker Worked but Cloud Run Still Failed**  
+   - *Problem*: Container responded locally yet still failed remotely.  
+   - *Cause*: Same architecture mismatch as #2.  
+   - *Fix*: Ensured every build pushed to Artifact Registry uses `--platform linux/amd64`.
+
+7. **Service Account Could Not Deploy Cloud Run**  
+   - *Problem*: `Permission 'iam.serviceaccounts.actAs' denied`.  
+   - *Cause*: Missing Service Account User role on the deployment SA.  
+   - *Fix*: `gcloud projects add-iam-policy-binding <PROJECT_ID> --member serviceAccount:<SA> --role roles/iam.serviceAccountUser`.
+
+8. **BigQuery Credentials Failing Locally**  
+   - *Problem*: `Default credentials not found`.  
+   - *Cause*: No `GOOGLE_APPLICATION_CREDENTIALS` exported while testing outside Cloud Run.  
+   - *Fix*: `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/key.json"` before running `uvicorn`.
+
+These notes capture the real-world troubleshooting steps for the FastAPI IMDb search service so future deployments go smoother.
+
+---
+
 ### Conclusion
 You now have the Cloud Run intermediate lab running on **FastAPI** with a dedicated `/search` endpoint that queries the public **IMDb** dataset via BigQuery. This variation highlights how to:
 - Swap frameworks (FastAPI vs Flask) without changing the overall deployment workflow.
