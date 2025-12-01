@@ -1,0 +1,7 @@
+fastapi 
+pydantic
+dotenv
+uvicorn
+gunicorn
+google-cloud-storage
+google-cloud-bigquery
